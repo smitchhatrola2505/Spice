@@ -1,14 +1,13 @@
-﻿@model Category
+﻿@model Spice.Models.Category
 @{
-	ViewData["Title"] = "Create";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Details";
 }
 
 <br />
-<h2 class="text-info">Create Category</h2>
+<h2 class="text-info">Category Details </h2>
 <br />
 
-<form method="post" asp-action="Create">
+<form method="post" asp-action="Details">
 	<div class="border backgroundWhite">
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<div class="row">
@@ -16,16 +15,16 @@
 				<label asp-for="Name" class="col-form-label"></label>
 			</div>
 			<div class="col-5">
-				<input asp-for="Name" class="form-control" />
+				<input asp-for="Name" readonly class="form-control" />
 				<span asp-validation-for="Name" class="text-danger"></span>
 			</div>
 		</div>
 		<br />
 		<div class="row">
 			<div class="col-5 offset-2">
-				<partial name="_CreateAndBacktoListButton" />
+				<partial name="_DetailsAndBackToListButton" model="Model.Id" />
 			</div>
 		</div>
 	</div>
-
 </form>
+
