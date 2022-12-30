@@ -8,7 +8,7 @@ using Spice.Data;
 
 #nullable disable
 
-namespace Spice.Data.Migrations
+namespace Spice.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -257,7 +257,6 @@ namespace Spice.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

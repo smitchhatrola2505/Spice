@@ -9,11 +9,11 @@ using Spice.Data;
 
 #nullable disable
 
-namespace Spice.Data.Migrations
+namespace Spice.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221228084608_AddMenuitemToDb")]
-    partial class AddMenuitemToDb
+    [Migration("20221230044559_intial")]
+    partial class intial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
