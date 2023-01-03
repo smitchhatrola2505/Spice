@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
 using Spice.Models;
 using Spice.Models.ViewModel;
+using Spice.Utility;
+using System.Data;
 
 namespace Spice.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize(Roles = SD.ManagerUser)]
+
 	public class CouponController : Controller
 	{
 		private readonly ApplicationDbContext _db;
