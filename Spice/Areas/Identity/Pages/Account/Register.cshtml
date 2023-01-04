@@ -103,20 +103,22 @@
 			</div>
 		</div>
 		<br />
-		@if (User.IsInRole(SD.ManagerUser))
+
+	@if (User.IsInRole(SD.ManagerUser))
 		{
 			<div class="row">
 				<div class="col-2">
 			
 				</div>
 				<div class="col-5">
-					<input type="radio" name="rdUserRole" value="@SD.KitchenUser" checked  /> @SD.KitchenUser &nbsp;
+					<input type="radio" name="rdUserRole" value="@SD.KitchenUser" checked /> @SD.KitchenUser &nbsp;
 					<input type="radio" name="rdUserRole" value="@SD.FrontDeskUser" checked /> @SD.FrontDeskUser &nbsp;
 					<input type="radio" name="rdUserRole" value="@SD.ManagerUser" checked /> @SD.ManagerUser &nbsp;
 				</div>
 			</div>
 			<br />
 		}
+
 		<div class="row">
 			<div class="col-5 offset-2">
 				<button id="registerSubmit" type="submit" class="btn btn-primary form-control">Register</button>

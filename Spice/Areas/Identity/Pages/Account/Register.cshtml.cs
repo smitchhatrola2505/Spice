@@ -160,7 +160,10 @@ namespace Spice.Areas.Identity.Pages.Account
 					}
 					if (!await _roleManager.RoleExistsAsync(SD.KitchenUser))
 					{
-						await _roleManager.CreateAsync(new IdentityRole(SD.FrontDeskUser));
+						await _roleManager.CreateAsync(new IdentityRole(SD.KitchenUser));
+
+						await _userManager.AddToRoleAsync(user, SD.KitchenUser);
+						await _signInManager.SignInAsync(user, isPersistent: false);
 					}
 
 					if (role == SD.KitchenUser)
@@ -185,15 +188,16 @@ namespace Spice.Areas.Identity.Pages.Account
 							{
 								await _userManager.AddToRoleAsync(user, SD.CustomerEndUser);
 								await _signInManager.SignInAsync(user, isPersistent: false);
-                                return LocalRedirect(returnUrl);
+								return LocalRedirect(returnUrl);
 
-                            }
-                        }
+							}
+						}
 					}
 
 					return RedirectToAction("Index", "User", new { area = "Admin" });
 
 					_logger.LogInformation("User created a new account with password.");
+
 
 					//               var userId = await _userManager.GetUserIdAsync(user);
 					//               var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

@@ -16,10 +16,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true) //options => options.SignIn.RequireConfirmedAccount = true
+builder.Services.AddIdentity<IdentityUser, IdentityRole>() //options => options.SignIn.RequireConfirmedAccount = true
 	.AddDefaultTokenProviders()
 		 .AddDefaultUI()
 	.AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+builder.Services.AddSession(option =>
+{
+	option.Cookie.IsEssential= true;
+	option.IdleTimeout = TimeSpan.FromMinutes(35);
+	option.Cookie.HttpOnly= true;
+});
 
 //builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 //builder.Services..Configure<StripeSettings>(Configuration.GetSection("Stripe"));
@@ -50,7 +58,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllerRoute(
 	name: "areas",
 	pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");

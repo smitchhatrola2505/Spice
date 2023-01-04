@@ -24,7 +24,13 @@ namespace Spice.Areas.Admin.Controllers
 			var claimsIdentity = (ClaimsIdentity)this.User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-			return View(await _db.ApplicationUser.Where(u => u.Id != claim.Value).ToListAsync());
+			var user = await _db.ApplicationUser.Where(u => u.Id != claim.Value).ToListAsync();
+			var userOrder =  from a in user
+							 orderby a.Name 
+							 select a;
+
+
+            return View(userOrder);
 		}
 
 		//Lock

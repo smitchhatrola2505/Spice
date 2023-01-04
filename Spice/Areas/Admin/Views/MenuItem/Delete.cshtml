@@ -41,7 +41,7 @@
 					<label asp-for="MenuItem.Price" class="col-form-label"></label>
 				</div>
 				<div class="col-8">
-					<input asp-for="MenuItem.Price"readonly class="form-control" /> 
+					<input asp-for="MenuItem.Price" readonly class="form-control" />
 				</div>
 				<span asp-validation-for="MenuItem.Price" class="text-danger"></span>
 			</div>
@@ -90,14 +90,9 @@
 </form>
 
 @section Scripts{
-	<script>
 
-		tinymce.init({
-			selector: 'textarea',
-			readonly:1,
-			plugins: "lists",
-			menubar: 'file edit format',
-		});
+	<script>
+		tinymce.init({ selector: 'textarea', readonly: 1 });
 	</script>
 
 
