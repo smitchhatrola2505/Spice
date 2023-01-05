@@ -39,7 +39,11 @@ namespace Spice.Areas.Admin.Controllers
 			{
 				return NotFound();
 			}
-			return View(menuItems);
+			var menuItemsOrder =  from a in menuItems 
+								  orderby a.CategoryId
+								  select a;
+
+			return View(menuItemsOrder);
 		}
 
 		//GET - CREATE

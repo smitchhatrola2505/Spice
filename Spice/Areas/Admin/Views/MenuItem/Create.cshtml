@@ -37,8 +37,9 @@
             </div>
             <div class="col-5">
                 <input asp-for="MenuItem.Price" class="form-control" />
+                <span asp-validation-for="MenuItem.Price" class="text-danger"></span>
+
             </div>
-            <span asp-validation-for="MenuItem.Price" class="text-danger"></span>
         </div>
         <br />
         <div class="form-group row">
