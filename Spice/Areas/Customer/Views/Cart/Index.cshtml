@@ -15,7 +15,7 @@
 		<div class="backgroundWhiteBorder">
 			<div class="container">
 				<div class="card">
-					<div class="card-header bg-dark text-light ml-0 row container">
+					<div class="card-header bg-dark text-light m-0 row container">
 						<div class="col-6">
 							<i class="fa fa-shopping-cart"></i>&nbsp;
 							Shopping Cart
@@ -24,38 +24,77 @@
 							<a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-outline-info btn-sm">Continue Shopping</a>
 						</div>
 					</div>
-				</div>
-				<div class="card-body">
-					@foreach (var item in Model.listCart)
-					{
-						<div class="row">
-							<div class="row d-none d-lg-block col-lg-2 text-center">
-								<img src="@item.MenuItem.Image" width="130" height="90" /> 
-							</div>
-							<div class="col-12 text-sm-center col-lg-5 text-lg-start">
-								<h4><strong>@item.MenuItem.Name</strong></h4>
-								<h5><small class="bg-opacity-75">@item.MenuItem.Description</small></h5>
-							</div>
-							<div class="col-lg-5 text-sm-center col-12 text-lg-end row">
-								<div class="col-4 text-md-start" style="padding-top:5px">
-									<h6><strong>$@item.MenuItem.Price <span class="text-muted">x</span> @item.Count</strong> </h6>
+					<div class="card-body">
+						@foreach (var item in Model.listCart)
+						{
+							<div class="row">
+								<div class="d-none d-lg-block col-lg-2 py-2 text-center">
+									<img src="@item.MenuItem.Image" width="120" height="85" class="rounded" />
 								</div>
+								<div class="col-12 text-sm-center col-lg-5 text-lg-start">
+									<h4><strong>@item.MenuItem.Name</strong></h4>
+									<h5><small class="bg-opacity-75">@item.MenuItem.Description</small></h5>
+								</div>
+								<div class="col-lg-5 text-sm-center col-12 text-lg-end row">
+									<div class="col-4 text-md-start" style="padding-top:5px">
+										<h6><strong>$@item.MenuItem.Price <span class="text-muted">x</span> @item.Count</strong> </h6>
+									</div>
 
-								<div class="col-6 col-sm-4 col-lg-6">
-									<div class="float-end mx-1">
-										<button type="submit" class="btn btn-primary" asp-action="plus" asp-route-cardId="@item.Id">
-											<i class="fas fa-plus"></i>
-										</button>
+									<div class="col-6 col-sm-4 col-lg-6">
+										<div class="float-end mx-1">
+											<button type="submit" class="btn btn-primary" asp-action="plus" asp-route-cardId="@item.Id">
+												<i class="fas fa-plus"></i>
+											</button>
+										</div>
+										<div class="float-end mx-1">
+											<button type="submit" class="btn btn-danger" asp-action="minus" asp-route-cardId="@item.Id">
+												<i class="fas fa-minus"></i>
+											</button>
+										</div>
 									</div>
-									<div class="float-end mx-1">
-										<button type="submit" class="btn btn-danger" asp-action="minus" asp-route-cardId="@item.Id">
-											<i class="fas fa-minus"></i>
+									<div class="col-2 col-sm-4 col-lg-2 text-end">
+										<button type="submit" class="btn btn-outline-danger" asp-action="remove" asp-route-cardId="@item.Id">
+											<i class="fas fa-trash"></i>
 										</button>
 									</div>
 								</div>
+							</div>
+							<hr />
+						}
+						<div class="row">
+							<div class="col-12 col-md-5">
+								<div class="row">
+									<div class="col-7">
+										<input asp-for="@Model.OrderHeader.CouponCode" id="txtCouponCode" class="form-control" placeholder="coupon code..." />
+									</div>
+									<div class="col-5 ">
+										<button type="submit" class="btn form-control btn-outline-success" id="btnCoupon" asp-action="AddCoupon">
+											Apply
+										</button>
+										<button type="submit" class="btn form-control btn-outline-danger" style="display:none" id="btnRemoveCoupon" asp-action="RemoveCoupon">
+											Remove
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12 col-md-6 offset-md-1 col-lg-4 offset-lg-3 pr-4">
+								<ul class="list-group">
+									<li class="list-group-item d-flex justify-content-between bg-light">
+										<span class="text-info fw-bolder">Total (USD)</span>
+										<strong class="text-info">$<span id="txtOrderTotal">@Model.OrderHeader.OrderTotal</span>
+										</strong>
+									</li>
+								</ul>
 							</div>
 						</div>
-					}
+
+					</div>
+					<div class="card-footer">
+						<div class="col-12 col-lg-4 offset-lg-8 col-md-6 offset-md-6">
+							<a asp-action="Summary" asp-area="Customer" asp-controller="Cart" class="btn btn-success form-control">Summary</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -66,3 +105,24 @@
 		<div class="backgroundWhite">No Item Add To The Shoping Cart ....</div>
 	}
 </form>
+
+@section Scripts{
+
+	<script>
+
+		$(function () {
+			var couponCode = document.getElementById("txtCouponCode").value;
+
+			if (couponCode.length > 0) {
+				document.getElementById("btnCoupon").style.display = "none";
+				document.getElementById("btnRemoveCoupon").style.display = "";
+			}
+			else {
+				document.getElementById("btnCoupon").style.display = "";
+				document.getElementById("btnRemoveCoupon").style.display = "none";
+			}
+
+
+		});
+	</script>
+}

@@ -1,0 +1,226 @@
+﻿@model Spice.Models.ViewModel.OrderDetailsCart
+@{
+	ViewData["Title"] = "Summary";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<br />
+
+<form method="post">
+	@if (Model.listCart.Count > 0)
+	{
+		<br />
+		<input id="userId" asp-for="@Model.listCart[0].ApplicationUserId" hidden />
+
+		<div class="backgroundWhiteBorder">
+			<div class="container">
+				<div class="card">
+					<div class="card-header bg-dark text-light m-0 row container">
+						<div class="col-6">
+							<i class="fa fa-shopping-cart"></i>&nbsp;
+							Orders	Summary
+						</div>
+						<div class="col-6 text-end">
+							<a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="btn btn-outline-info btn-sm">Back To Cart</a>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="container rounded p-2">
+							<div class="row">
+								<div class="col-12 col-lg-6 pb-4">
+									<div class="row">
+										<h4 class="d-flex justify-content-between align-items-center mb-3">
+											<span class="text-info">PickUp Details : </span>
+										</h4>
+									</div>
+									<div class="row my-1">
+										<div class="col-3">
+											<label>Name</label>
+										</div>
+										<div class="col-9">
+											<input asp-for="@Model.OrderHeader.PickupName" type="text" class="form-control" id="txtName" />
+										</div>
+									</div>
+									<div class="row my-1">
+										<div class="col-3">
+											<label>Phone</label>
+										</div>
+										<div class="col-9">
+											<input asp-for="@Model.OrderHeader.PhoneNumber" id="txtPhone" type="text" class="form-control" />
+										</div>
+									</div>
+									<div class="row my-1">
+										<div class="col-3">
+											<label>Date</label>
+										</div>
+										<div class="col-9">
+											<input asp-for="@Model.OrderHeader.PickUpDate" value="" id="datepicker" type="text" class="form-control" />
+										</div>
+									</div>
+									<div class="row my-1">
+										<div class="col-3">
+											<label>Time</label>
+										</div>
+										<div class="col-9">
+											<input asp-for="@Model.OrderHeader.PickUpTime" value="" id="timepicker" type="text" class="form-control" />
+										</div>
+									</div>
+									<div class="row my-1">
+										<div class="col-3">
+											<label>Comments	</label>
+										</div>
+										<div class="col-9">
+											<textarea asp-for="@Model.OrderHeader.Comments" style="height:100px;" class="form-control"></textarea>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-12 col-lg-5 offset-1">
+									<h4 class="d-flex justify-content-between align-items-center mb-3">
+										<span class="text-info">Order Summary : </span>
+									</h4>
+									<ul class="list-group mb-3">
+										@{
+											var total = 0.00;
+										}
+
+										@foreach (var details in Model.listCart)
+										{
+											<li class="list-group-item d-flex justify-content-between">
+												<div>
+													<h6 class="my-0">@details.MenuItem.Name</h6>
+													<small class="text-muted">Quantity: @details.Count </small>
+												</div>
+												<span class="text-muted">$@(details.MenuItem.Price * details.Count)</span>
+												@{
+													total += (details.MenuItem.Price * details.Count);
+												}
+											</li>
+										}
+										@if (Model.OrderHeader.CouponCode != null)
+										{
+											<li class="list-group-item d-flex justify-content-between">
+												<div class="text-success">
+													<h6 class="my-0">Promo Code</h6>
+													<small class="text-success">
+														@Model.OrderHeader.CouponCode.ToLower()
+													</small>
+												</div>
+												<span class="text-success">-$@(total - Model.OrderHeader.OrderTotal)</span>
+
+											</li>
+										}
+
+
+										<li class="list-group-item d-flex justify-content-between bg-light">
+											<small class="text-info fw-bolder">Total (USD)</small>
+											<strong class="text-info">$@(Model.OrderHeader.OrderTotal)</strong>
+
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-footer">
+						<div class="row">
+							<div class="col-12 col-md-4 offset-md-8">
+								<button type="submit" id="btnPlaceOrder" onclick="return validateInput()" value="Place Order" class="btn btn-success form-control">Place Order</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	}
+	else
+	{
+		<div class="backgroundWhite">No Item Add To The Shoping Cart ....</div>
+	}
+</form>
+
+@section Scripts{
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>
+	<script>
+
+		$(function () {
+
+			var minDt = 0;
+			if (getTimeFromCurrentDate >= 20) {
+				minDt = 1;
+			}
+			$("#datepicker").datepicker({ minDate: minDt, maxDate: "+1W" });
+			$("#timepicker").timepicker({ 'minTime': '11:00 AM', 'maxTime': '9:00 PM', step: '30' });
+		});
+
+		function setPickUpTime() {
+			var dateSelect = document.getElementById("datepicker").value;
+			var dt = new Date(dateSelect);
+			var today = new Date();
+
+			dt.setHours(0, 0, 0, 0);
+			if (dt > today) {
+				selectedTime = '11:00am';
+			}
+			else {
+				selectedTime = getTimeFromCurrentDate();
+			}
+			$('#timepicker').timepicker('option', 'minTime', selectedTime)
+		}
+
+		function getTimeFromCurrentDate() {
+			var curDt = new Date();
+
+			var minTime = "";
+
+			if (curDt.getHours() < 11) {
+				minTime = '12:00pm';
+			}
+			else {
+				if (curDt.getMinutes() < 30) {
+					minTime = (curDt.getHours() + 1).toString() + ':30pm';
+				}
+				else {
+					minTime = (curDt.getHours() + 2).toString() + ':00pm';
+				}
+			}
+			return minTime;
+		}
+		$('#datepicker').change(function () {
+			setPickUpTime();
+		});
+
+		function validateInput() {
+
+			var Name = document.getElementById("txtName").value;
+			var Phone = document.getElementById("txtPhone").value;
+			var dt = document.getElementById("datepicker").value;
+			var Time = document.getElementById("timepicker").value;
+
+	
+			if (Name.toString() == '') {
+				alert("Please enter pickup Name");
+				return false;
+			}
+			else if (Phone.toString() == '') {
+				alert("Please enter Phone Number");
+				return false;
+			}
+
+			else if (dt.toString() == '') {
+				alert("Please select pickup date");
+				return false;
+			}
+			else if (time.toString() == '') {
+				alert("Please select pickup time");
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+
+	</script>
+}

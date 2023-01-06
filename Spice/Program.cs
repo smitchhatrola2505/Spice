@@ -5,7 +5,12 @@ using Microsoft.CodeAnalysis.Emit;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
 using Spice.Services;
+using Spice.Utility;
+using Stripe;
+using Stripe.BillingPortal;
+using Stripe.Terminal;
 using System.Configuration;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +26,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>() //options => options.
 		 .AddDefaultUI()
 	.AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 builder.Services.AddSession(option =>
 {
@@ -29,14 +36,13 @@ builder.Services.AddSession(option =>
 	option.Cookie.HttpOnly= true;
 });
 
+builder.Services.Configure<StripeSetting>(Configuration.GetSection("Stripe"));
+
 //builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 //builder.Services..Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 //builder.Services.Configure<EmailOptions>(Configuration);
 
-
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -52,10 +58,14 @@ else
 	app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
 
 app.UseAuthorization();
 app.UseSession();
