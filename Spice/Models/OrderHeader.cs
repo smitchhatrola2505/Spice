@@ -35,11 +35,11 @@ namespace Spice.Models
         public DateTime PickUpDate { get; set; }
 
         [Display(Name ="Coupon Code")]
-            public string CouponCode { get; set; }
-            public double CouponCodeDiscount { get; set; }
+            public string? CouponCode { get; set; }
+            public double? CouponCodeDiscount { get; set; }
             public string Status { get; set; }
             public string PaymentStatus { get; set; }
-            public string Comments { get; set; }
+            public string? Comments { get; set; }
 
         [Display(Name ="Pickup Name")]
         public string PickupName { get; set; }
@@ -47,7 +47,7 @@ namespace Spice.Models
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        public string TransactionId { get; set; }
+        public string? TransactionId { get; set; }
 
     }
 }

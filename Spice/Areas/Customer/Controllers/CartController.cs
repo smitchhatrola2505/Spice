@@ -5,6 +5,7 @@ using Spice.Data;
 using Spice.Models;
 using Spice.Models.ViewModel;
 using Spice.Utility;
+using Stripe;
 using System.Security.Claims;
 
 namespace Spice.Areas.Customer.Controllers
@@ -13,14 +14,15 @@ namespace Spice.Areas.Customer.Controllers
 	public class CartController : Controller
 	{
 		private readonly ApplicationDbContext _db;
-
+		//private readonly IConfiguration _configuration;
 
 		[BindProperty]
 		public OrderDetailsCart detailsCart { get; set; }
 
-		public CartController(ApplicationDbContext db)
+		public CartController(ApplicationDbContext db) 
 		{
 			_db = db;
+			
 		}
 
 		public async Task<IActionResult> Index()
@@ -110,7 +112,7 @@ namespace Spice.Areas.Customer.Controllers
 		[ValidateAntiForgeryToken]
 		[ActionName("Summary")]
 
-		public async Task<IActionResult> SummaryPOST()
+		public async Task<IActionResult> SummaryPOST(string stripeToken)
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -163,6 +165,39 @@ namespace Spice.Areas.Customer.Controllers
 
 			_db.ShoppingCart.RemoveRange(detailsCart.listCart);
 			HttpContext.Session.SetInt32(SD.ssShoppingCartCount, 0);
+			await _db.SaveChangesAsync();
+
+			var options = new ChargeCreateOptions
+			{
+				Amount = Convert.ToInt32(detailsCart.OrderHeader.OrderTotal * 100),
+				Currency = "usd",
+				Description = "Order ID : " + detailsCart.OrderHeader.Id,
+				Source = stripeToken
+			};
+
+			var service = new ChargeService();
+			Charge charge = service.Create(options);
+
+			if(charge.BalanceTransactionId == null)
+			{
+				detailsCart.OrderHeader.PaymentStatus = SD.PaymentStatusRejected;
+			}
+			else
+			{
+				detailsCart.OrderHeader.TransactionId = charge.BalanceTransactionId;
+			}
+			if(charge.Status.ToLower() == "succeeded")
+			{
+				detailsCart.OrderHeader.PaymentStatus = SD.PaymentStatusApproved;
+				detailsCart.OrderHeader.Status = SD.StatusSubmited;
+
+			}
+			else
+			{
+				detailsCart.OrderHeader.PaymentStatus = SD.PaymentStatusRejected;
+
+			}
+
 			await _db.SaveChangesAsync();
 
 			return RedirectToAction("Index", "Home");

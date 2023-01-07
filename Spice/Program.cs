@@ -7,9 +7,6 @@ using Spice.Data;
 using Spice.Services;
 using Spice.Utility;
 using Stripe;
-using Stripe.BillingPortal;
-using Stripe.Terminal;
-using System.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +33,9 @@ builder.Services.AddSession(option =>
 	option.Cookie.HttpOnly= true;
 });
 
-builder.Services.Configure<StripeSetting>(Configuration.GetSection("Stripe"));
+
+builder.Services.Configure<StripeSetting>(
+	builder.Configuration.GetSection("Stripe"));
 
 //builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 //builder.Services..Configure<StripeSettings>(Configuration.GetSection("Stripe"));
@@ -59,13 +58,12 @@ else
 }
 
 
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
 app.UseAuthorization();
 app.UseSession();
