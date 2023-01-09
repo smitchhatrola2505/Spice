@@ -19,11 +19,11 @@ namespace Spice.Models
         public DateTime OrderDate { get; set; }
 
         [Required]
-        public double OrderTotalOriginal { get; set; }
+		public double OrderTotalOriginal { get; set; }
 
         [Required]
-        [DisplayFormat(DataFormatString ="{0:C}")]
-        [Display(Name ="Order Total")]
+        //[DisplayFormat(DataFormatString = "{0:C}")]
+		[Display(Name ="Order Total")]
         public double OrderTotal { get; set; }
 
         [Required]
@@ -36,7 +36,9 @@ namespace Spice.Models
 
         [Display(Name ="Coupon Code")]
             public string? CouponCode { get; set; }
-            public double? CouponCodeDiscount { get; set; }
+
+		[DisplayFormat(DataFormatString = "{0:n2}")]
+		public double? CouponCodeDiscount { get; set; }
             public string Status { get; set; }
             public string PaymentStatus { get; set; }
             public string? Comments { get; set; }

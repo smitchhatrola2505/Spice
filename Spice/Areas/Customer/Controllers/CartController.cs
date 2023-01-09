@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
@@ -170,7 +171,7 @@ namespace Spice.Areas.Customer.Controllers
 			var options = new ChargeCreateOptions
 			{
 				Amount = Convert.ToInt32(detailsCart.OrderHeader.OrderTotal * 100),
-				Currency = "usd",
+				Currency = "USD",
 				Description = "Order ID : " + detailsCart.OrderHeader.Id,
 				Source = stripeToken
 			};
@@ -261,5 +262,7 @@ namespace Spice.Areas.Customer.Controllers
 
 			return RedirectToAction(nameof(Index));
 		}
+
+
 	}
 }
