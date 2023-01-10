@@ -97,7 +97,7 @@
 												</div>
 												<span class="text-muted">$@(details.MenuItem.Price * details.Count)</span>
 												@{
-													total += (details.MenuItem.Price * details.Count);
+													total += Math.Round((details.MenuItem.Price * details.Count),1);
 												}
 											</li>
 										}
@@ -110,11 +110,12 @@
 														@Model.OrderHeader.CouponCode.ToLower()
 													</small>
 												</div>
-												<span class="text-success">-$@(total - Model.OrderHeader.OrderTotal)</span>
+												<span class="text-success">-$@(total - Model.OrderHeader.OrderTotal)
+
+												</span>
 
 											</li>
 										}
-
 
 										<li class="list-group-item d-flex justify-content-between bg-light">
 											<small class="text-info fw-bolder">Total (USD)</small>

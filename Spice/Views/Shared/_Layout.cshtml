@@ -60,6 +60,26 @@
 
 						}
 
+						@if (User.IsInRole(SD.KitchenUser) || User.IsInRole(SD.FrontDeskUser) || User.IsInRole(SD.ManagerUser))
+						{
+							<li class="nav-item dropdown text-white-50">
+								<a class="nav-link dropdown-toggle" href="#" id="navbarDropDown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Order
+								</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
+									@if (User.IsInRole(SD.KitchenUser) || User.IsInRole(SD.ManagerUser))
+									{
+										<a class="dropdown-item" asp-action="ManageOrder" asp-controller="Order" asp-area="Customer">Manage Order</a>
+									}
+									@if (User.IsInRole(SD.FrontDeskUser) || User.IsInRole(SD.ManagerUser))
+									{
+										<a class="dropdown-item" asp-action="PickUpOrder" asp-controller="Order" asp-area="Customer">Order Pickup</a>
+									}
+								</div>
+							</li>
+						}
+
+
 						@if (HttpContextAccessor.HttpContext.Session.GetInt32(@SD.ssShoppingCartCount) != null)
 						{
 							<li style="color:white;">
@@ -94,7 +114,7 @@
 
 	<footer class="border-top pl-3 footer text-white-50" style="background-color:#343a40;">
 		<div class="container">
-			&copy; 2022 - Spice
+			&copy; Powered By - Smit Chhatrola (2022)
 		</div>
 	</footer>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
