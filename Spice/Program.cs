@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.CodeAnalysis.Emit;
@@ -37,10 +38,15 @@ builder.Services.AddSession(option =>
 builder.Services.Configure<StripeSetting>(
 	builder.Configuration.GetSection("Stripe"));
 
-//builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-//builder.Services..Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+builder.Services.AddAuthentication().AddFacebook(FacebookOptions =>
+{
+	FacebookOptions.AppId = "729873621887318";
+	FacebookOptions.AppSecret = "1aced6919bb47628d5fbf8d9521f6cd9";
+	 
+});
+
+
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
-//builder.Services.Configure<EmailOptions>(Configuration);
 
 
 var app = builder.Build();
