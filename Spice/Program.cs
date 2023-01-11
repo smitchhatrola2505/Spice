@@ -38,6 +38,10 @@ builder.Services.AddSession(option =>
 builder.Services.Configure<StripeSetting>(
 	builder.Configuration.GetSection("Stripe"));
 
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+builder.Services.Configure<EmailOptions>(builder.Configuration);
+
+
 builder.Services.AddAuthentication().AddFacebook(FacebookOptions =>
 {
 	FacebookOptions.AppId = "729873621887318";
@@ -46,7 +50,6 @@ builder.Services.AddAuthentication().AddFacebook(FacebookOptions =>
 });
 
 
-builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 
 var app = builder.Build();
