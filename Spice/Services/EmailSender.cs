@@ -22,7 +22,7 @@ namespace Spice.Services
 			var client = new SendGridClient(sendGridKey);
 			var msg = new SendGridMessage()
 			{
-				From = new EmailAddress("chhatrolasmit@gmail.com", "Spice Restaurant"),
+				From = new EmailAddress("schhatrola779@rku.ac.in", "Spice Restaurant"),
 				Subject = subject,
 				PlainTextContent = message,
 				HtmlContent = message

@@ -1,9 +1,11 @@
 
 using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Spice.Data;
 using Spice.Services;
 using Spice.Utility;
@@ -35,12 +37,14 @@ builder.Services.AddSession(option =>
 });
 
 
+
 builder.Services.Configure<StripeSetting>(
 	builder.Configuration.GetSection("Stripe"));
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.Configure<EmailOptions>(builder.Configuration);
 
+builder.Services.AddScoped<IDbInisializer, DbInitializer>();
 
 builder.Services.AddAuthentication().AddFacebook(FacebookOptions =>
 {
@@ -50,14 +54,16 @@ builder.Services.AddAuthentication().AddFacebook(FacebookOptions =>
 });
 
 
-
-
 var app = builder.Build();
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 	app.UseMigrationsEndPoint();
+
 }
 else
 {
@@ -70,9 +76,14 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
+
 app.UseRouting();
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
+
+//DbInitializer.Initialize();
+
 
 app.UseAuthorization();
 app.UseSession();
