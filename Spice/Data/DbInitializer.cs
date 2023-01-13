@@ -23,7 +23,7 @@ namespace Spice.Data
 			_userManager = userManager;
 			_roleManager = roleManager;
 		}
-		public async Task<bool> Initialize()
+		public async void Initialize()
 		{
 			try
 			{
@@ -39,7 +39,7 @@ namespace Spice.Data
 
 			if (_db.Roles.Any(r => r.Name == SD.ManagerUser))
 			{
-				return false;
+				return;
 			}
 			_roleManager.CreateAsync(new IdentityRole(SD.ManagerUser)).GetAwaiter().GetResult();
 			_roleManager.CreateAsync(new IdentityRole(SD.FrontDeskUser)).GetAwaiter().GetResult();
@@ -59,8 +59,6 @@ namespace Spice.Data
 			var user = await _db.Users.Where(u => u.Email == "admin@gmail.com").FirstOrDefaultAsync();
 
 			await _userManager.AddToRoleAsync(user, SD.ManagerUser);
-
-			return true;
 		}
 	}
 }

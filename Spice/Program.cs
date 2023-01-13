@@ -35,9 +35,9 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddSession(option =>
 {
-	option.Cookie.IsEssential= true;
+	option.Cookie.IsEssential = true;
 	option.IdleTimeout = TimeSpan.FromMinutes(35);
-	option.Cookie.HttpOnly= true;
+	option.Cookie.HttpOnly = true;
 });
 
 
@@ -47,7 +47,7 @@ builder.Services.Configure<StripeSetting>(
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.Configure<EmailOptions>(builder.Configuration);
 
-builder.Services.AddScoped<IDbInisializer,DbInitializer>();
+builder.Services.AddScoped<IDbInisializer, DbInitializer>();
 
 
 builder.Services.AddAuthentication().AddFacebook(FacebookOptions =>
@@ -59,6 +59,9 @@ builder.Services.AddAuthentication().AddFacebook(FacebookOptions =>
 var app = builder.Build();
 
 
+var scope = app.Services.CreateAsyncScope();
+
+var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInisializer>();
 
 // Configure the HTTP request pipeline.
 
@@ -79,15 +82,13 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-using (var scope = app.Services.CreateAsyncScope())
-{
-	var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInisializer>();
-	// use dbInitializer
-	dbInitializer.Initialize();
-}
+
+// use dbInitializer
+
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
+dbInitializer.Initialize();
 
 
 app.UseAuthorization();

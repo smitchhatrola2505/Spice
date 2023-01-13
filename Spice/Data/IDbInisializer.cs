@@ -4,6 +4,6 @@ namespace Spice.Data
 {
 	public interface IDbInisializer
 	{
-		Task<bool> Initialize(); 
+		void Initialize(); 
 	}
 }
