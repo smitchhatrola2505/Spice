@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EllipticCurve;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.EntityFrameworkCore;
 using Spice.Models;
 using Spice.Utility;
+using System.Security.Cryptography;
 
 namespace Spice.Data
 {
@@ -20,11 +23,11 @@ namespace Spice.Data
 			_userManager = userManager;
 			_roleManager = roleManager;
 		}
-		public async void Initialize()
+		public async Task<bool> Initialize()
 		{
 			try
 			{
-				if(_db.Database.GetPendingMigrations().Count()>0) 
+				if (_db.Database.GetPendingMigrations().Count() > 0)
 				{
 					_db.Database.Migrate();
 				}
@@ -34,9 +37,9 @@ namespace Spice.Data
 
 			}
 
-			if(_db.Roles.Any(r=>r.Name == SD.ManagerUser))
+			if (_db.Roles.Any(r => r.Name == SD.ManagerUser))
 			{
-				return;
+				return false;
 			}
 			_roleManager.CreateAsync(new IdentityRole(SD.ManagerUser)).GetAwaiter().GetResult();
 			_roleManager.CreateAsync(new IdentityRole(SD.FrontDeskUser)).GetAwaiter().GetResult();
@@ -45,18 +48,19 @@ namespace Spice.Data
 
 			_userManager.CreateAsync(new ApplicationUser
 			{
-				UserName= "admin@gmail.com",
+				UserName = "admin@gmail.com",
 				Email = "admin@gmail.com",
-				Name ="Smit Patel",
-				EmailConfirmed= true,
-				PhoneNumber ="1234567890"
-			},"Admin@123").GetAwaiter().GetResult();
+				Name = "Smit Patel",
+				EmailConfirmed = true,
+				PhoneNumber = "1234567890"
+			}, "Admin@123").GetAwaiter().GetResult();
 
-			IdentityUser User = await _db.Users.FirstOrDefaultAsync(u=>u.Email == "admin@gmail.com");
- 			await _userManager.AddToRoleAsync(User,SD.ManagerUser);
-			
-		
+
+			var user = await _db.Users.Where(u => u.Email == "admin@gmail.com").FirstOrDefaultAsync();
+
+			await _userManager.AddToRoleAsync(user, SD.ManagerUser);
+
+			return true;
 		}
-
 	}
 }

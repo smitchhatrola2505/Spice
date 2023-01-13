@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
@@ -39,8 +40,8 @@ namespace Spice.Areas.Customer.Controllers
 				var cnt = _db.ShoppingCart.Where(u=>u.ApplicationUserId == claim.Value).ToList().Count;
 				HttpContext.Session.SetInt32(SD.ssShoppingCartCount, cnt);
 			}
-
-			return View(IndexVM);
+				return View(IndexVM);
+			
 		}
 
 		[Authorize]
